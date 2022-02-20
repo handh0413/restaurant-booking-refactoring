@@ -1,12 +1,23 @@
 package com.cleancode.restaurant;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 public class BookingSchedulerTest {
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void 예약은_정시에만_가능하다_정시가_아닌경우_예약불가() {
+        // arrange
+        DateTime notOnTheHour = new DateTime(2022, 02, 21, 9, 5);
+        Customer customer = new Customer("Fake Name", "010-1111-2222");
+        Schedule schedule = new Schedule(notOnTheHour, 1, customer);
+        BookingScheduler bookingScheduler = new BookingScheduler(3);
 
+        // act
+        bookingScheduler.addSchedule(schedule);
+
+        // assert
+        // expected runtime exception
     }
 
     @Test
