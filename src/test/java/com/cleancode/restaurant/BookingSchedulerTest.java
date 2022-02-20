@@ -22,11 +22,13 @@ public class BookingSchedulerTest {
     public BookingScheduler bookingScheduler;
     // ctrl + alt + f > introduce field
     private TestableSmsSender testableSmsSender = new TestableSmsSender();
+    private TestableMailSender testableMailSender = new TestableMailSender();
 
     @Before
     public void setUp() {
         bookingScheduler = new BookingScheduler(CAPACITY_PER_HOUR);
         bookingScheduler.setSmsSender(testableSmsSender);
+        bookingScheduler.setMailSender(testableMailSender);
     }
 
     @Test(expected = RuntimeException.class)
@@ -115,8 +117,6 @@ public class BookingSchedulerTest {
     @Test
     public void 이메일이_있는_경우에는_이메일_발송() {
         // arrange
-        TestableMailSender testableMailSender = new TestableMailSender();
-        bookingScheduler.setMailSender(testableMailSender);
         Schedule schedule = new Schedule(ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER_WITH_MAIL);
 
         // act
