@@ -3,21 +3,29 @@ package com.cleancode.restaurant;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class BookingSchedulerTest {
+    // ctrl + alt + c > introduce constant
+    public static final Customer CUSTOMER = new Customer("Fake Name", "010-1111-2222");
+    public static final int CAPACITY_PER_HOUR = 3;
+    public static final int UNDER_CAPACITY = 1;
+    public static final DateTime NOT_ON_THE_HOUR = new DateTime(2022, 02, 21, 9, 5);
+    public static final DateTimeFormatter FORMAT = DateTimeFormat.forPattern("YYYY/MM/dd HH:mm");
+    public static final DateTime ON_THE_HOUR = FORMAT.parseDateTime("2022/02/21 09:00");
+    public BookingScheduler bookingScheduler;
+
+    public BookingSchedulerTest() {
+        bookingScheduler = new BookingScheduler(CAPACITY_PER_HOUR);
+    }
 
     @Test(expected = RuntimeException.class)
     public void 예약은_정시에만_가능하다_정시가_아닌경우_예약불가() {
         // arrange
-        DateTime notOnTheHour = new DateTime(2022, 02, 21, 9, 5);
-        Customer customer = new Customer("Fake Name", "010-1111-2222");
-        Schedule schedule = new Schedule(notOnTheHour, 1, customer);
-        BookingScheduler bookingScheduler = new BookingScheduler(3);
+        Schedule schedule = new Schedule(NOT_ON_THE_HOUR, 1, CUSTOMER);
 
         // act
         bookingScheduler.addSchedule(schedule);
@@ -29,11 +37,7 @@ public class BookingSchedulerTest {
     @Test
     public void 예약은_정시에만_가능하다_정시인_경우_예약가능() {
         // arrange
-        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("YYYY/MM/dd HH:mm");
-        DateTime onTheHour = dateTimeFormatter.parseDateTime("2022/02/21 09:00");
-        Customer customer = new Customer("Fake Name", "010-1111-2222");
-        Schedule schedule = new Schedule(onTheHour, 1, customer);
-        BookingScheduler bookingScheduler = new BookingScheduler(3);
+        Schedule schedule = new Schedule(ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER);
 
         // act
         bookingScheduler.addSchedule(schedule);
