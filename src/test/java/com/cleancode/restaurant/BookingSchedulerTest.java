@@ -3,6 +3,7 @@ package com.cleancode.restaurant;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -16,10 +17,18 @@ public class BookingSchedulerTest {
     public static final DateTime NOT_ON_THE_HOUR = new DateTime(2022, 02, 21, 9, 5);
     public static final DateTimeFormatter FORMAT = DateTimeFormat.forPattern("YYYY/MM/dd HH:mm");
     public static final DateTime ON_THE_HOUR = FORMAT.parseDateTime("2022/02/21 09:00");
+
     public BookingScheduler bookingScheduler;
+    // ctrl + alt + f > introduce field
+    private TestableSmsSender testableSmsSender = new TestableSmsSender();
 
     public BookingSchedulerTest() {
         bookingScheduler = new BookingScheduler(CAPACITY_PER_HOUR);
+    }
+
+    @Before
+    public void setUp() {
+        bookingScheduler.setSmsSender(testableSmsSender);
     }
 
     @Test(expected = RuntimeException.class)
@@ -81,7 +90,6 @@ public class BookingSchedulerTest {
     @Test
     public void 예약완료시_SMS는_무조건_발송() {
         // arrange
-        TestableSmsSender testableSmsSender = new TestableSmsSender();
         Schedule schedule = new Schedule(ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER);
         bookingScheduler.setSmsSender(testableSmsSender);
 
