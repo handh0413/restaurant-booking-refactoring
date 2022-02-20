@@ -22,12 +22,9 @@ public class BookingSchedulerTest {
     // ctrl + alt + f > introduce field
     private TestableSmsSender testableSmsSender = new TestableSmsSender();
 
-    public BookingSchedulerTest() {
-        bookingScheduler = new BookingScheduler(CAPACITY_PER_HOUR);
-    }
-
     @Before
     public void setUp() {
+        bookingScheduler = new BookingScheduler(CAPACITY_PER_HOUR);
         bookingScheduler.setSmsSender(testableSmsSender);
     }
 
@@ -102,7 +99,16 @@ public class BookingSchedulerTest {
 
     @Test
     public void 이메일이_없는_경우에는_이메일_미발송() {
+        // arrange
+        TestableMailSender testableMailSender = new TestableMailSender();
+        Schedule schedule = new Schedule(ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER);
+        bookingScheduler.setMailSender(testableMailSender);
 
+        // act
+        bookingScheduler.addSchedule(schedule);
+
+        // assert
+        assertThat(testableMailSender.getCountSendMailMethodIsCalled(), is(0));
     }
 
     @Test
