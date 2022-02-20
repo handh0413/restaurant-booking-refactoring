@@ -19,8 +19,8 @@ public class BookingSchedulerTest {
     public static final DateTimeFormatter FORMAT = DateTimeFormat.forPattern("YYYY/MM/dd HH:mm");
     public static final DateTime ON_THE_HOUR = FORMAT.parseDateTime("2022/02/21 09:00");
 
-    public BookingScheduler bookingScheduler;
     // ctrl + alt + f > introduce field
+    public BookingScheduler bookingScheduler;
     private TestableSmsSender testableSmsSender = new TestableSmsSender();
     private TestableMailSender testableMailSender = new TestableMailSender();
 
@@ -144,6 +144,14 @@ public class BookingSchedulerTest {
 
     @Test
     public void 현재날짜가_일요일이_아닌경우_예약가능() {
+        // arrange
+        BookingScheduler bookingScheduler = new MondayBookingScheduler(CAPACITY_PER_HOUR);
 
+        // act
+        Schedule newSchedule = new Schedule(ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER_WITH_MAIL);
+        bookingScheduler.addSchedule(newSchedule);
+
+        // assert
+        assertThat(bookingScheduler.hasSchedule(newSchedule), is(true));
     }
 }

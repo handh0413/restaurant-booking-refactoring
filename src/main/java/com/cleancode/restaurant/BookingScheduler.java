@@ -2,6 +2,8 @@ package com.cleancode.restaurant;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,7 @@ public class BookingScheduler {
         }
 
         // 일요일에는 시스템을 오픈하지 않는다.
-        DateTime now = new DateTime();
+        DateTime now = getNow();
         if (now.getDayOfWeek() == DateTimeConstants.SUNDAY) {
             throw new RuntimeException("Booking system is not available on sunday");
         }
@@ -67,7 +69,13 @@ public class BookingScheduler {
     }
 
     public DateTime getNow() {
-        DateTime now = new DateTime();
-        return now;
+        // 일요일이 아닐 때...
+        DateTimeFormatter format = DateTimeFormat.forPattern("YYYY/MM/dd HH:mm");
+        DateTime sample = format.parseDateTime("2022/02/21 09:00");
+
+        // 일요일 일 때
+        // DateTimeFormatter format = DateTimeFormat.forPattern("YYYY/MM/dd HH:mm");
+        // DateTime sample = format.parseDateTime("2022/02/20 09:00");
+        return sample;
     }
 }

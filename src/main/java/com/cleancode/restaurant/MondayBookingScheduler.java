@@ -4,15 +4,15 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class SundayBookingScheduler extends BookingScheduler {
-    public SundayBookingScheduler(int capacityPerHour) {
+public class MondayBookingScheduler extends BookingScheduler {
+    public MondayBookingScheduler(int capacityPerHour) {
         super(capacityPerHour);
     }
 
     @Override
     public DateTime getNow() {
         DateTimeFormatter format = DateTimeFormat.forPattern("YYYY/MM/dd HH:mm");
-        DateTime sundayOnTheHour = format.parseDateTime("2022/02/20 09:00");
+        DateTime sundayOnTheHour = format.parseDateTime("2022/02/21 17:00");
         return sundayOnTheHour;
     }
 }
