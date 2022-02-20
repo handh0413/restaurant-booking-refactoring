@@ -12,9 +12,11 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -47,6 +49,35 @@ public class BookingSchedulerMockTest {
     @Before
     public void setUp() {
 
+    }
+
+    @Test
+    public void test_mock() {
+        List mockList = Mockito.mock(ArrayList.class);
+
+        mockList.add("one");
+        verify(mockList, times(1)).add("one");
+        assertEquals(0, mockList.size());
+
+        Mockito.when(mockList.size()).thenReturn(100);
+        assertEquals(100, mockList.size());
+    }
+
+    @Test
+    public void test_spy() {
+        List spyList = Mockito.spy(new ArrayList<String>());
+
+        spyList.add("one");
+        System.out.println(spyList.size());
+
+        spyList.add("two");
+        System.out.println(spyList.size());
+
+        verify(spyList, times(1)).add("one"); // 과거에 호출한 것을 검증
+        // Mockito.verify(spyList).add("three"); // 과거에 호출하지 않아서 오류 발생
+
+        Mockito.when(spyList.size()).thenReturn(100);
+        System.out.println(spyList.size());
     }
 
     @Test(expected = RuntimeException.class)
@@ -120,7 +151,7 @@ public class BookingSchedulerMockTest {
     @Test
     public void 이메일이_없는_경우에는_이메일_미발송() {
         // arrange
-        Schedule schedule = new Schedule(ON_THE_HOUR, CAPACITY_PER_HOUR, CUSTOMER);
+       Schedule schedule = new Schedule(ON_THE_HOUR, CAPACITY_PER_HOUR, CUSTOMER);
 
         // act
         bookingScheduler.addSchedule(schedule);
@@ -144,10 +175,10 @@ public class BookingSchedulerMockTest {
     @Test
     public void 현재날짜가_일요일인_경우_예약불가_예외처리() {
         // arrange
-        BookingScheduler bookingScheduler = new TestableBookingScheduler(CAPACITY_PER_HOUR, "2022/02/20 09:00");
+        DateTime sunday = DateTimeFormat.forPattern("YYYY/MM/dd HH:mm").parseDateTime("2022/02/20 09:00");
+        when(bookingScheduler.getNow()).thenReturn(sunday);
 
         try {
-            // act
             Schedule newSchedule = new Schedule(ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER_WITH_MAIL);
             bookingScheduler.addSchedule(newSchedule);
             fail();
@@ -160,9 +191,9 @@ public class BookingSchedulerMockTest {
     @Test
     public void 현재날짜가_일요일이_아닌경우_예약가능() {
         // arrange
-        BookingScheduler bookingScheduler = new TestableBookingScheduler(CAPACITY_PER_HOUR, "2022/02/21 09:00");
+        DateTime monday = DateTimeFormat.forPattern("YYYY/MM/dd HH:mm").parseDateTime("2022/02/21 09:00");
+        when(bookingScheduler.getNow()).thenReturn(monday);
 
-        // act
         Schedule newSchedule = new Schedule(ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER_WITH_MAIL);
         bookingScheduler.addSchedule(newSchedule);
 
