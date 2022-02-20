@@ -1,7 +1,13 @@
 package com.cleancode.restaurant;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.junit.Assert;
 import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 public class BookingSchedulerTest {
 
@@ -22,7 +28,18 @@ public class BookingSchedulerTest {
 
     @Test
     public void 예약은_정시에만_가능하다_정시인_경우_예약가능() {
+        // arrange
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("YYYY/MM/dd HH:mm");
+        DateTime onTheHour = dateTimeFormatter.parseDateTime("2022/02/21 09:00");
+        Customer customer = new Customer("Fake Name", "010-1111-2222");
+        Schedule schedule = new Schedule(onTheHour, 1, customer);
+        BookingScheduler bookingScheduler = new BookingScheduler(3);
 
+        // act
+        bookingScheduler.addSchedule(schedule);
+
+        // assert
+        assertThat(bookingScheduler.hasSchedule(schedule), is(true));
     }
 
     @Test

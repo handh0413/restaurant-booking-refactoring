@@ -52,4 +52,16 @@ public class BookingScheduler {
             mailSender.sendMail(schedule);
         }
     }
+
+    public boolean hasSchedule(Schedule schedule) {
+        return schedules.contains(schedule);
+    }
+
+    public void setSmsSender(SmsSender smsSender) {
+        this.smsSender = smsSender;
+    }
+
+    public void setMailSender(MailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 }
