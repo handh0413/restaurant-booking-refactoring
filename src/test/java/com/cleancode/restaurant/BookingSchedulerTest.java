@@ -65,7 +65,17 @@ public class BookingSchedulerTest {
 
     @Test
     public void 시간대별_인원제한이_있다_같은_시간대가_다르면_Capacity_차있어도_스케쥴_추가_성공() {
+        // arrange
+        Schedule schedule = new Schedule(ON_THE_HOUR, CAPACITY_PER_HOUR, CUSTOMER);
+        bookingScheduler.addSchedule(schedule);
 
+        // act
+        DateTime differentHour = ON_THE_HOUR.plus(1);
+        Schedule newSchedule = new Schedule(differentHour, UNDER_CAPACITY, CUSTOMER);
+        bookingScheduler.addSchedule(newSchedule);
+
+        // assert
+        assertThat(bookingScheduler.hasSchedule(newSchedule), is(true));
     }
 
     @Test
