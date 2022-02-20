@@ -80,7 +80,16 @@ public class BookingSchedulerTest {
 
     @Test
     public void 예약완료시_SMS는_무조건_발송() {
+        // arrange
+        TestableSmsSender testableSmsSender = new TestableSmsSender();
+        Schedule schedule = new Schedule(ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER);
+        bookingScheduler.setSmsSender(testableSmsSender);
 
+        // act
+        bookingScheduler.addSchedule(schedule);
+
+        // assert
+        assertThat(testableSmsSender.isSendMethodIsCalled(), is(true));
     }
 
     @Test
