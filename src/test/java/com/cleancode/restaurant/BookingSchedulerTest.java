@@ -48,7 +48,19 @@ public class BookingSchedulerTest {
 
     @Test
     public void 시간대별_인원제한이_있다_같은_시간대에_Capacity_초과할_경우_예외발생() {
+        // arrange
+        Schedule schedule = new Schedule(ON_THE_HOUR, CAPACITY_PER_HOUR, CUSTOMER);
+        bookingScheduler.addSchedule(schedule);
 
+        try {
+            // act
+            Schedule newSchedule = new Schedule(ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER);
+            bookingScheduler.addSchedule(schedule);
+            fail();
+        } catch (RuntimeException e) {
+            // assert
+            assertThat(e.getMessage(), is("Number of people is over restaurant capacity per hour"));
+        }
     }
 
     @Test
