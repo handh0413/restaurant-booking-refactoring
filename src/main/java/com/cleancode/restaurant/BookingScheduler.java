@@ -1,5 +1,8 @@
 package com.cleancode.restaurant;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +38,11 @@ public class BookingScheduler {
             throw new RuntimeException("Number of people is over restaurant capacity per hour");
         }
 
-        /*
         // 일요일에는 시스템을 오픈하지 않는다.
-        Datetime now = new Datetime();
-        if (now.getDayOfWeek() == DateTimeCostants.SUNDAY) {
+        DateTime now = new DateTime();
+        if (now.getDayOfWeek() == DateTimeConstants.SUNDAY) {
             throw new RuntimeException("Booking system is not available on sunday");
         }
-         */
 
         schedules.add(schedule);
 
@@ -63,5 +64,10 @@ public class BookingScheduler {
 
     public void setMailSender(MailSender mailSender) {
         this.mailSender = mailSender;
+    }
+
+    public DateTime getNow() {
+        DateTime now = new DateTime();
+        return now;
     }
 }

@@ -128,7 +128,18 @@ public class BookingSchedulerTest {
 
     @Test
     public void 현재날짜가_일요일인_경우_예약불가_예외처리() {
+        // arrange
+        BookingScheduler bookingScheduler = new SundayBookingScheduler(CAPACITY_PER_HOUR);
 
+        try {
+            // act
+            Schedule newSchedule = new Schedule(ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER_WITH_MAIL);
+            bookingScheduler.addSchedule(newSchedule);
+            fail();
+        } catch (RuntimeException e) {
+            // assert
+            assertThat(e.getMessage(), is("Booking system is not available on sunday"));
+        }
     }
 
     @Test
